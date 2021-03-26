@@ -180,41 +180,6 @@ function moveAround(){
 
 
 function draw() {
-	// translate(-_w/2, -_h/2);
-	orbitControl();
-	ambientLight(64, 64, 64);
-	if (mouseIsPressed) {
-		trigger = 0;
-	}
-	if (trigger == 1) {} else {
-		background(0, 250);
-	}
-	generateRay();
-	if (frameCount > 120) {
-		raysMotion();
-	}
-	bumi();
-	earthField(_h * 0.4);
-	earthField(_h * 0.4 + 150);
-	earthField(_h * 0.4 + 300);
-	comments();
-	moveAround();
-	push();
-	// rotateX(180);
-	// normalMaterial();
-	translate(camX, camY + 150, camZ - 350);
-	rotateZ(tilt);
-	scale(0.4);
-	// ambientMaterial(255,255,255);
-	model(spaceship);
-	pop();
-}
-//End of moveAround()
-
-
-
-
-function draw() {
 	background(0);
 	// saturn = new Planet(50, 50, 50, 40, 1);
 	// pluto = new Planet(-150, -100, 20, 25, 2);
