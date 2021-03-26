@@ -126,6 +126,10 @@ class Blackhole {
 
 
 //Start of moveAround()
+let camX = 0;
+let camY = 0;
+let camZ;
+let tilt = 0;
 function moveAround() {
 	let trigger = 0;
 	if (keyIsDown(LEFT_ARROW)) {
