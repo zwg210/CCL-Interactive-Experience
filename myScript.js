@@ -21,6 +21,9 @@ function setup() {
 	createCanvas(windowWidth, windowHeight, WEBGL);
 	_W = windowWidth;
 	_H = windowHeight;
+	angleMode(DEGREES);
+	smooth();
+	frameRate(30);
 	camZ = (height / 2.0) / tan(30.0);
 	// detail = createSlider(3, 24, 14);
 	// detail.position(10, height - 30);
@@ -130,49 +133,81 @@ let camX = 0;
 let camY = 0;
 let camZ;
 let tilt = 0;
-function moveAround() {
+function moveAround(){  
 	let trigger = 0;
 	if (keyIsDown(LEFT_ARROW)) {
-		camX -= 5;
+    camX -= 5;
 		tilt -= 4;
 		trigger = 1;
-	}
+  }
 
-	if (keyIsDown(RIGHT_ARROW)) {
-		camX += 5;
+  if (keyIsDown(RIGHT_ARROW)) {
+    camX += 5;
 		tilt += 4;
 		trigger = 1;
-	}
+  }
 
-	if (keyIsDown(UP_ARROW)) {
-		camY -= 5;
-	}
+  if (keyIsDown(UP_ARROW)) {
+    camY -= 5;
+  }
 
-	if (keyIsDown(DOWN_ARROW)) {
-		camY += 5;
-	}
-	if (keyIsDown(107) || keyIsDown(187)) {
+  if (keyIsDown(DOWN_ARROW)) {
+    camY += 5;
+  }
+	if (keyIsDown(107) || keyIsDown(187)){
 		camZ -= 5;
 	}
-	if (keyIsDown(109) || keyIsDown(189)) {
+	if (keyIsDown(109) || keyIsDown(189)){
 		camZ += 5;
 	}
-
+	
 	if (trigger === 0) {
-		if (tilt > 0) {
-			tilt -= 2
+		if (tilt > 0){
+			tilt -=2
 		}
-		else if (tilt < 0) {
+		else if (tilt < 0){
 			tilt += 2
 		}
 	}
-	if (tilt > 0) {
-		tilt = min(tilt, 16)
+	if (tilt > 0){
+			tilt = min(tilt, 16)
+		}
+	else if (tilt < 0){
+			tilt = max(tilt, -16)
+		}
+  camera(camX, camY, camZ, camX, camY, camZ - 100);
+}
+
+
+function draw() {
+	// translate(-_w/2, -_h/2);
+	orbitControl();
+	ambientLight(64, 64, 64);
+	if (mouseIsPressed) {
+		trigger = 0;
 	}
-	else if (tilt < 0) {
-		tilt = max(tilt, -16)
+	if (trigger == 1) {} else {
+		background(0, 250);
 	}
-	camera(camX, camY, camZ, camX, camY, camZ - 100);
+	generateRay();
+	if (frameCount > 120) {
+		raysMotion();
+	}
+	bumi();
+	earthField(_h * 0.4);
+	earthField(_h * 0.4 + 150);
+	earthField(_h * 0.4 + 300);
+	comments();
+	moveAround();
+	push();
+	// rotateX(180);
+	// normalMaterial();
+	translate(camX, camY + 150, camZ - 350);
+	rotateZ(tilt);
+	scale(0.4);
+	// ambientMaterial(255,255,255);
+	model(spaceship);
+	pop();
 }
 //End of moveAround()
 
@@ -197,7 +232,6 @@ function draw() {
 	// x = 400 * cos(theta);
 	// y = 200 * sin(theta);
 	// pop();
-	model(spaceship);
 	moveAround();
 	push();
 	// rotateX(180);
@@ -205,10 +239,9 @@ function draw() {
 	translate(camX, camY + 150, camZ - 350);
 	rotateZ(tilt);
 	scale(0.4);
-	ambientMaterial(255, 255, 255);
+	// ambientMaterial(255,255,255);
 	model(spaceship);
 	pop();
-	console.log(camX, camY, camZ);
 }
 
 /* global p5 sphere detail alpha blue brightness color green hue lerpColor lightness red saturation background clear colorMode fill noFill noStroke stroke erase noErase 2D Primitives arc ellipse circle line point quad rect square triangle ellipseMode noSmooth rectMode smooth strokeCap strokeJoin strokeWeight bezier bezierDetail bezierPoint bezierTangent curve curveDetail curveTightness curvePoint curveTangent beginContour beginShape bezierVertex curveVertex endContour endShape quadraticVertex vertex plane box sphere cylinder cone ellipsoid torus loadModel model HALF_PI PI QUARTER_PI TAU TWO_PI DEGREES RADIANS print frameCount deltaTime focused cursor frameRate noCursor displayWidth displayHeight windowWidth windowHeight windowResized width height fullscreen pixelDensity displayDensity getURL getURLPath getURLParams remove disableFriendlyErrors noLoop loop isLooping push pop redraw select selectAll removeElements changed input createDiv createP createSpan createImg createA createSlider createButton createCheckbox createSelect createRadio createColorPicker createInput createFileInput createVideo createAudio VIDEO AUDIO createCapture createElement createCanvas resizeCanvas noCanvas createGraphics blendMode drawingContext setAttributes boolean string number applyMatrix resetMatrix rotate rotateX rotateY rotateZ scale shearX shearY translate storeItem getItem clearStorage removeItem createStringDict createNumberDict append arrayCopy concat reverse shorten shuffle sort splice subset float int str boolean byte char unchar hex unhex join match matchAll nf nfc nfp nfs split splitTokens trim deviceOrientation accelerationX accelerationY accelerationZ pAccelerationX pAccelerationY pAccelerationZ rotationX rotationY rotationZ pRotationX pRotationY pRotationZ turnAxis setMoveThreshold setShakeThreshold deviceMoved deviceTurned deviceShaken keyIsPressed key keyCode keyPressed keyReleased keyTyped keyIsDown movedX movedY mouseIsPressed mouseX mouseY pmouseX pmouseY winMouseX winMouseY pwinMouseX pwinMouseY mouseButton mouseWheel requestPointerLock exitPointerLock touches createImage saveCanvas saveFrames image tint noTint imageMode pixels blend copy filter get loadPixels set updatePixels loadImage loadJSON loadStrings loadTable loadXML loadBytes httpGet httpPost httpDo Output createWriter save saveJSON saveStrings saveTable day hour minute millis month second year abs ceil constrain dist exp floor lerp log mag map max min norm pow round sq sqrt fract createVector noise noiseDetail noiseSeed randomSeed random randomGaussian acos asin atan atan2 cos sin tan degrees radians angleMode textAlign textLeading textSize textStyle textWidth textAscent textDescent loadFont text textFont orbitControl debugMode noDebugMode ambientLight specularColor directionalLight pointLight lights lightFalloff spotLight noLights loadShader createShader shader resetShader normalMaterial texture textureMode textureWrap ambientMaterial emissiveMaterial specularMaterial shininess camera perspective ortho frustum createCamera setCamera CENTER CORNER CORNERS POINTS WEBGL RGB ARGB HSB LINES CLOSE BACKSPACE DELETE ENTER RETURN TAB ESCAPE SHIFT CONTROL OPTION ALT UP_ARROW DOWN_ARROW LEFT_ARROW RIGHT_ARROW sampleRate freqToMidi midiToFreq soundFormats getAudioContext userStartAudio loadSound createConvolver setBPM saveSound getMasterVolume masterVolume soundOut chain drywet biquadFilter process freq res gain toggle setType freq setType pan phase triggerAttack triggerRelease setADSR attack decay sustain release dispose notes polyvalue AudioVoice noteADSR setADSR noteAttack noteRelease dispose isLoaded playMode set isLooping isPlaying isPaused setVolume pan getPan rate duration currentTime jump channels sampleRate frames getPeaks reverseBuffer onended setPath setBuffer processPeaks addCue removeCue clearCues save getBlob getLevel toggleNormalize waveform analyze getEnergy getCentroid linAverages logAverages getOctaveBands fade attackTime attackLevel decayTime decayLevel releaseTime releaseLevel setADSR setRange setExp triggerAttack triggerRelease r width setType input output stream mediaStream currentSource enabled amplitude getSources setSource bands process panner process positionX positionY positionZ orient orientX orientY orientZ setFalloff maxDist rollof leftDelay rightDelay process delayTime feedback filter setType process convolverNode process impulses addImpulse resetImpulse toggleImpulse sequence setBPM getBPM addPhrase removePhrase getPhrase replaceSequence onStep setBPM musicalTimeMode maxIterations synced bpm timeSignature interval iterations compressor process attack knee ratio threshold release reduction record isDetected update onPeak WaveShaperNode process getAmount getOversample amp setInput connect disconnect play pause stop set smooth start add mult loop */
